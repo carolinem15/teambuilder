@@ -14,6 +14,8 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+let employeeHTML = "",
+
 inquirer
   .prompt([
     /* Pass your questions in here */
@@ -44,10 +46,10 @@ inquirer
         choices: ['Engineer', 'Intern', 'I am done adding team members']
     },
     
-  ])
-  .then(answers => {
-    // Use user feedback for... whatever!!
-    if(answers.addTeamMember === 'Engineer') {
+  ]);
+
+  switch(role){
+      case "Engineer":
         inquirer.prompt ([
             {
                 type: "input",
@@ -76,37 +78,50 @@ inquirer
                 choices: ['Engineer', 'Intern', 'I am done adding team members']
             },
         ])
-    }
-    if(answers.addTeamMember === 'Intern') {
-        inquirer.prompt ([
-            {
-                type: "input",
-                message: "What is your intern's name?",
-                name: "internName"
-            },
-            {
-                type: "input",
-                message: "What is your intern's ID?",
-                name: "internId"
-            },
-            {
-                type: "input",
-                message: "What is your intern's email?",
-                name: "internEmail"
-            },
-            {
-                type: "input",
-                message: "What is your intern's school?",
-                name: "internSchool"
-            },
-            {
-                type: "list",
-                message: "Which type of team member would you like to add?",
-                name: "addTeamMember",
-                choices: ['Engineer', 'Intern', 'I am done adding team members']
-            },
-        ])
-    }
+        .then(answers => {
+            const engineer = new Engineer(engineerName, engineerId, engineerEmail, engineerGitHub)
+            teamMember = fs.readFileSync("templates/engineer.html");
+            teamHTML = teamHTML + "\n" + eval('`'+ teamMember +'`');
+        })
+        break;
+        case "Intern":
+            inquirer.prompt ([
+                {
+                    type: "input",
+                    message: "What is your intern's name?",
+                    name: "internName"
+                },
+                {
+                    type: "input",
+                    message: "What is your intern's ID?",
+                    name: "internId"
+                },
+                {
+                    type: "input",
+                    message: "What is your intern's email?",
+                    name: "internEmail"
+                },
+                {
+                    type: "input",
+                    message: "What is your intern's school?",
+                    name: "internSchool"
+                },
+                {
+                    type: "list",
+                    message: "Which type of team member would you like to add?",
+                    name: "addTeamMember",
+                    choices: ['Engineer', 'Intern', 'I am done adding team members']
+                },
+            ])
+            .then(answers => {
+                const intern = new Intern(internName, internId, internEmail, internSchool)
+                teamMember = fs.readFileSync("templates/intern.html");
+                teamHTML = teamHTML + "\n" + eval('`'+ teamMember +'`');
+            })
+  }
+  .then(answers => {
+    // Use user feedback for... whatever!!
+
   })
   .catch(error => {
     if(error.isTtyError) {
