@@ -14,7 +14,7 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-const teamMembers = []
+const teamMembers = [];
 
 function makeTeam() {
 inquirer
@@ -48,6 +48,9 @@ inquirer
     },
     
   ]).then(userChoice => {
+// HINT: each employee type (manager, engineer, or intern) has slightly different
+// information; write your code to ask different questions via inquirer depending on
+// employee type.
 // added switch case to execute code blocks based on user input
     switch(userChoice.addTeamMember) {
 
@@ -61,17 +64,17 @@ inquirer
 
         case "I am done adding team members":
             render(teamMembers);
-    }
+    };
   })
   .catch(error => {
     if(error.isTtyError) {
       // Prompt couldn't be rendered in the current environment
     } else {
-      // Something else when wrong
+      // Something else went wrong
       console.log('Oh no! Something else is wrong with makeTeam')
     }
   });
-}
+};
 
 function addEngineer() {
         inquirer.prompt ([
@@ -117,11 +120,11 @@ function addEngineer() {
             if(error.isTtyError) {
               // Prompt couldn't be rendered in the current environment
             } else {
-              // Something else when wrong
+              // Something else went wrong
               console.log('Oh no! Something else is wrong with addEngineer')
             }
           });
-    }
+    };
     function addIntern() {
         inquirer.prompt ([
             {
@@ -166,53 +169,35 @@ function addEngineer() {
             if(error.isTtyError) {
               // Prompt couldn't be rendered in the current environment
             } else {
-              // Something else when wrong
+              // Something else went wrong
               console.log('Oh no! Something else is wrong with addIntern')
             }
           });
-    }
-  
-  
+    };
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-var engineer = {
-    name = engineerName.answers,
-    id = engineerId.answers,
-    email = engineerEmail.answers,
-    github = engineerGitHub.answers,
+render() {
+teamMembers.forEach
 }
-var intern = {
-    name = internName.answers,
-    id = internId.answers,
-    email = internEmail.answers,
-    school = internSchool.answers,
-}
-var manager = {
-    name = managerName.answers,
-    id = managerId.answers,
-    email = managerEmail.answers,
-    office = managerOffice.answers,
-}
-
-engineer.forEach(render)
-intern.forEach(render)
-manager.forEach(render)
-
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+fs.writeFile('output/team.html', render(), function(error){
+    if (error) return console.log(error);
+    console.log('Success!');
+})
 
 // HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
 // and Intern classes should all extend from a class named Employee; see the directions
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+createTeam();
+
+module.exports = teamMembers
