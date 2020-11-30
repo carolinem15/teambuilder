@@ -14,8 +14,9 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-let employeeHTML = "",
+const teamMembers = []
 
+function makeTeam() {
 inquirer
   .prompt([
     /* Pass your questions in here */
@@ -46,10 +47,33 @@ inquirer
         choices: ['Engineer', 'Intern', 'I am done adding team members']
     },
     
-  ]);
+  ]).then(userChoice => {
+// added switch case to execute code blocks based on user input
+    switch(userChoice.addTeamMember) {
 
-  switch(role){
-      case "Engineer":
+        case "Engineer":
+            addEngineer();
+            break;
+
+        case "Intern":
+            addIntern();
+            break;
+
+        case "I am done adding team members":
+            render(teamMembers);
+    }
+  })
+  .catch(error => {
+    if(error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+    } else {
+      // Something else when wrong
+      console.log('Oh no! Something else is wrong with makeTeam')
+    }
+  });
+}
+
+function addEngineer() {
         inquirer.prompt ([
             {
                 type: "input",
@@ -78,59 +102,77 @@ inquirer
                 choices: ['Engineer', 'Intern', 'I am done adding team members']
             },
         ])
-        .then(answers => {
-            const engineer = new Engineer(engineerName, engineerId, engineerEmail, engineerGitHub)
-            teamMember = fs.readFileSync("templates/engineer.html");
-            teamHTML = teamHTML + "\n" + eval('`'+ teamMember +'`');
-        })
-        break;
-        case "Intern":
-            inquirer.prompt ([
-                {
-                    type: "input",
-                    message: "What is your intern's name?",
-                    name: "internName"
-                },
-                {
-                    type: "input",
-                    message: "What is your intern's ID?",
-                    name: "internId"
-                },
-                {
-                    type: "input",
-                    message: "What is your intern's email?",
-                    name: "internEmail"
-                },
-                {
-                    type: "input",
-                    message: "What is your intern's school?",
-                    name: "internSchool"
-                },
-                {
-                    type: "list",
-                    message: "Which type of team member would you like to add?",
-                    name: "addTeamMember",
-                    choices: ['Engineer', 'Intern', 'I am done adding team members']
-                },
-            ])
-            .then(answers => {
-                const intern = new Intern(internName, internId, internEmail, internSchool)
-                teamMember = fs.readFileSync("templates/intern.html");
-                teamHTML = teamHTML + "\n" + eval('`'+ teamMember +'`');
-            })
-  }
-  .then(answers => {
-    // Use user feedback for... whatever!!
+        // should it be userChoice here or answers?
+        .then(userChoice => {
+            console.log(userChoice);
 
-  })
-  .catch(error => {
-    if(error.isTtyError) {
-      // Prompt couldn't be rendered in the current environment
-    } else {
-      // Something else when wrong
-      console.log('Oh no! Something else is wrong')
+            const engineer = new Engineer(userChoice.engineerName, userChoice.engineerID, userChoice.engineerEmail, userChoice.engineerGitHub)
+
+            teamMembers.push(engineer)
+
+            makeTeam();
+
+        })
+        .catch(error => {
+            if(error.isTtyError) {
+              // Prompt couldn't be rendered in the current environment
+            } else {
+              // Something else when wrong
+              console.log('Oh no! Something else is wrong with addEngineer')
+            }
+          });
     }
-  });
+    function addIntern() {
+        inquirer.prompt ([
+            {
+                type: "input",
+                message: "What is your intern's name?",
+                name: "internName"
+            },
+            {
+                type: "input",
+                message: "What is your intern's ID?",
+                name: "internId"
+            },
+            {
+                type: "input",
+                message: "What is your intern's email?",
+                name: "internEmail"
+            },
+            {
+                type: "input",
+                message: "What is your intern's school?",
+                name: "internSchool"
+            },
+            {
+                type: "list",
+                message: "Which type of team member would you like to add?",
+                name: "addTeamMember",
+                choices: ['Engineer', 'Intern', 'I am done adding team members']
+            },
+        ])
+        // should it be userChoice here or answers?
+        .then(userChoice => {
+            console.log(userChoice);
+
+            const intern = new Intern(userChoice.internName, userChoice.internID, userChoice.internEmail, userChoice.internSchool)
+
+            teamMembers.push(intern)
+
+            makeTeam();
+
+        })
+        .catch(error => {
+            if(error.isTtyError) {
+              // Prompt couldn't be rendered in the current environment
+            } else {
+              // Something else when wrong
+              console.log('Oh no! Something else is wrong with addIntern')
+            }
+          });
+    }
+  
+  
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
