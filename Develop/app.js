@@ -21,38 +21,23 @@ inquirer
   .prompt([
     /* Pass your questions in here */
     {
-        type: "input",
-        message: "What is your manager's name?",
-        name: "managerName"
-    },
-    {
-        type: "input",
-        message: "What is your manager's ID?",
-        name: "managerId"
-    },
-    {
-        type: "input",
-        message: "What is your manager's email?",
-        name: "managerEmail"
-    },
-    {
-        type: "input",
-        message: "What is your manager's office number?",
-        name: "managerOffice"
-    },
-    {
         type: "list",
         message: "Which type of team member would you like to add?",
         name: "addTeamMember",
-        choices: ['Engineer', 'Intern', 'I am done adding team members']
+        choices: ['Manager', 'Engineer', 'Intern', 'I am done adding team members']
     },
     
   ]).then(userChoice => {
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
+
 // added switch case to execute code blocks based on user input
     switch(userChoice.addTeamMember) {
+
+        case "Manager":
+            addManager();
+            break;
 
         case "Engineer":
             addEngineer();
@@ -76,6 +61,62 @@ inquirer
   });
 };
 
+// function to add a new manager 
+function addManager() {
+    inquirer.prompt ([
+        {
+            type: "input",
+            message: "What is your manager's name?",
+            name: "managerName"
+        },
+        {
+            type: "input",
+            message: "What is your manager's ID?",
+            name: "managerId"
+        },
+        {
+            type: "input",
+            message: "What is your manager's email?",
+            name: "managerEmail"
+        },
+        {
+            type: "input",
+            message: "What is your manager's office number?",
+            name: "managerOffice"
+        },
+        // remove manager option in this list because I only want the user to add one manager
+        {
+            type: "list",
+            message: "Which type of team member would you like to add?",
+            name: "addTeamMember",
+            choices: ['Engineer', 'Intern', 'I am done adding team members']
+        },
+    ])
+    // should it be userChoice here or answers?
+    .then(userChoice => {
+        console.log(userChoice);
+
+        // new manager object that includes user's responses
+        const manager = new manager(userChoice.managerName, userChoice.managerID, userChoice.managerEmail, userChoice.managerOffice)
+
+        // push the new manager object to the teamMembers array
+        teamMembers.push(manager)
+        
+        //run makeTeam function to run the primary inquirer questions again so the user can add a new employee if they want
+        makeTeam();
+
+    })
+    .catch(error => {
+        if(error.isTtyError) {
+          // Prompt couldn't be rendered in the current environment
+        } else {
+          // Something else went wrong
+          console.log('Oh no! Something else is wrong with addManager')
+        }
+      });
+};
+
+// function to add a new engineer 
 function addEngineer() {
         inquirer.prompt ([
             {
@@ -109,10 +150,13 @@ function addEngineer() {
         .then(userChoice => {
             console.log(userChoice);
 
+            // new engineer object that includes user's responses
             const engineer = new Engineer(userChoice.engineerName, userChoice.engineerID, userChoice.engineerEmail, userChoice.engineerGitHub)
 
+            // push the new engineer object to the teamMembers array
             teamMembers.push(engineer)
-
+            
+            //run makeTeam function to run the primary inquirer questions again so the user can add a new employee if they want
             makeTeam();
 
         })
@@ -178,9 +222,7 @@ function addEngineer() {
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-render() {
-teamMembers.forEach
-}
+render(teamMembers.forEach)
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
