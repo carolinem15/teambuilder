@@ -48,7 +48,8 @@ inquirer
             break;
 
         case "I am done adding team members":
-            render(teamMembers);
+            renderTeams();
+            break;
     };
   })
   .catch(error => {
@@ -222,17 +223,18 @@ function addEngineer() {
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-render(teamMembers.forEach)
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
-fs.writeFile('output/team.html', render(), function(error){
-    if (error) return console.log(error);
-    console.log('Success!');
-})
+function renderTeams() {
+    fs.writeFile("output/team.html", render(teamMembers), function (error) {
+        if (error) return console.log(error);
+        console.log('Success!');
+    });
+}
 
 // HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
 // and Intern classes should all extend from a class named Employee; see the directions
@@ -240,6 +242,8 @@ fs.writeFile('output/team.html', render(), function(error){
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
-createTeam();
+renderTeams();
 
 module.exports = teamMembers
+
+
