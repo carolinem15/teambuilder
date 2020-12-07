@@ -15,7 +15,7 @@ const render = require("./lib/htmlRenderer");
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 const teamMembers = [];
-
+makeTeam()
 function makeTeam() {
 inquirer
   .prompt([
@@ -63,6 +63,7 @@ inquirer
 };
 
 // function to add a new manager 
+
 function addManager() {
     inquirer.prompt ([
         {
@@ -85,23 +86,17 @@ function addManager() {
             message: "What is your manager's office number?",
             name: "managerOffice"
         },
-        // remove manager option in this list because I only want the user to add one manager
-        {
-            type: "list",
-            message: "Which type of team member would you like to add?",
-            name: "addTeamMember",
-            choices: ['Engineer', 'Intern', 'I am done adding team members']
-        },
     ])
     // should it be userChoice here or answers?
     .then(userChoice => {
         console.log(userChoice);
 
         // new manager object that includes user's responses
-        const manager = new manager(userChoice.managerName, userChoice.managerID, userChoice.managerEmail, userChoice.managerOffice)
-
+        const manager = new Manager(userChoice.managerName, userChoice.managerId, userChoice.managerEmail, userChoice.managerOffice)
+        console.log(manager)
         // push the new manager object to the teamMembers array
         teamMembers.push(manager)
+        console.log(teamMembers)
         
         //run makeTeam function to run the primary inquirer questions again so the user can add a new employee if they want
         makeTeam();
@@ -140,19 +135,13 @@ function addEngineer() {
                 message: "What is your engineer's GitHub username?",
                 name: "engineerGitHub"
             },
-            {
-                type: "list",
-                message: "Which type of team member would you like to add?",
-                name: "addTeamMember",
-                choices: ['Engineer', 'Intern', 'I am done adding team members']
-            },
         ])
         // should it be userChoice here or answers?
         .then(userChoice => {
             console.log(userChoice);
 
             // new engineer object that includes user's responses
-            const engineer = new Engineer(userChoice.engineerName, userChoice.engineerID, userChoice.engineerEmail, userChoice.engineerGitHub)
+            const engineer = new Engineer(userChoice.engineerName, userChoice.engineerId, userChoice.engineerEmail, userChoice.engineerGitHub)
 
             // push the new engineer object to the teamMembers array
             teamMembers.push(engineer)
@@ -192,18 +181,12 @@ function addEngineer() {
                 message: "What is your intern's school?",
                 name: "internSchool"
             },
-            {
-                type: "list",
-                message: "Which type of team member would you like to add?",
-                name: "addTeamMember",
-                choices: ['Engineer', 'Intern', 'I am done adding team members']
-            },
         ])
         // should it be userChoice here or answers?
         .then(userChoice => {
             console.log(userChoice);
 
-            const intern = new Intern(userChoice.internName, userChoice.internID, userChoice.internEmail, userChoice.internSchool)
+            const intern = new Intern(userChoice.internName, userChoice.internId, userChoice.internEmail, userChoice.internSchool)
 
             teamMembers.push(intern)
 
@@ -247,3 +230,4 @@ renderTeams();
 module.exports = teamMembers
 
 
+// okay soooo it makes the teams html in the output folder, but it doesnt run the node cli inquirer questions ..... probably has to do with the employee js files. i think i added the constructors wrong (see testing with jest class vid at 25min)
